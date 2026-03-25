@@ -176,48 +176,60 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="py-8 max-w-7xl mx-auto w-full">
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-10 gap-4">
-        <h1 className="text-3xl font-serif font-bold text-primary">AstroYSW Command Center</h1>
-        <div className="flex gap-4 flex-wrap">
-          {view !== "edit" && (
-            <div className="flex rounded-full border border-primary/15 overflow-hidden">
-              <button onClick={() => setView("list")} className={`px-5 py-2 text-sm font-medium transition-all ${view === "list" ? 'bg-primary text-white' : 'text-primary hover:bg-primary/5'}`}>Posts</button>
-              <button onClick={() => { setView("likes"); fetchLikes(token); }} className={`px-5 py-2 text-sm font-medium transition-all ${view === "likes" ? 'bg-primary text-white' : 'text-primary hover:bg-primary/5'}`}>Likes ({likes.length})</button>
-              <button onClick={() => { setView("subscribers"); fetchSubscribers(token); }} className={`px-5 py-2 text-sm font-medium transition-all ${view === "subscribers" ? 'bg-primary text-white' : 'text-primary hover:bg-primary/5'}`}>Subscribers ({subscribers.length})</button>
-              <button onClick={() => { setView("contacts"); fetchContacts(token); }} className={`px-5 py-2 text-sm font-medium transition-all ${view === "contacts" ? 'bg-primary text-white' : 'text-primary hover:bg-primary/5'}`}>Messages ({contacts.length})</button>
-            </div>
-          )}
-          {view === "list" && <button onClick={() => openEditor()} className="px-6 py-2 bg-secondary hover:bg-secondary-light text-white rounded-full font-medium shadow-md transition-all">New Transmission</button>}
-          {view === "edit" && <button onClick={() => setView("list")} className="px-6 py-2 bg-white border border-primary/20 text-primary rounded-full font-medium hover:bg-primary/5 transition-all">Cancel</button>}
-          <button onClick={() => { setToken(""); localStorage.removeItem("admin_token"); }} className="px-6 py-2 border border-red-200 text-red-500 hover:bg-red-50 rounded-full font-medium transition-all">Logout</button>
+    <div className="py-6 sm:py-8 max-w-7xl mx-auto w-full px-2 sm:px-4">
+      <div className="flex flex-col gap-4 mb-8 sm:mb-10">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-primary">Command Center</h1>
+          <div className="flex gap-2 sm:gap-4">
+            {view === "edit" && <button onClick={() => setView("list")} className="px-4 sm:px-6 py-2 bg-white border border-primary/20 text-primary rounded-full font-medium hover:bg-primary/5 transition-all text-sm">Cancel</button>}
+            <button onClick={() => { setToken(""); localStorage.removeItem("admin_token"); }} className="px-4 sm:px-6 py-2 border border-red-200 text-red-500 hover:bg-red-50 rounded-full font-medium transition-all text-sm">Logout</button>
+          </div>
         </div>
+        {view !== "edit" && (
+          <div className="flex items-center gap-3 overflow-x-auto pb-1 -mx-2 px-2">
+            <div className="flex rounded-full border border-primary/15 overflow-hidden shrink-0">
+              <button onClick={() => setView("list")} className={`px-3 sm:px-5 py-2 text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${view === "list" ? 'bg-primary text-white' : 'text-primary hover:bg-primary/5'}`}>Posts</button>
+              <button onClick={() => { setView("likes"); fetchLikes(token); }} className={`px-3 sm:px-5 py-2 text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${view === "likes" ? 'bg-primary text-white' : 'text-primary hover:bg-primary/5'}`}>Likes ({likes.length})</button>
+              <button onClick={() => { setView("subscribers"); fetchSubscribers(token); }} className={`px-3 sm:px-5 py-2 text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${view === "subscribers" ? 'bg-primary text-white' : 'text-primary hover:bg-primary/5'}`}>Subs ({subscribers.length})</button>
+              <button onClick={() => { setView("contacts"); fetchContacts(token); }} className={`px-3 sm:px-5 py-2 text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${view === "contacts" ? 'bg-primary text-white' : 'text-primary hover:bg-primary/5'}`}>Msgs ({contacts.length})</button>
+            </div>
+            {view === "list" && <button onClick={() => openEditor()} className="px-4 sm:px-6 py-2 bg-secondary hover:bg-secondary-light text-white rounded-full font-medium shadow-md transition-all text-xs sm:text-sm whitespace-nowrap shrink-0">+ New Post</button>}
+          </div>
+        )}
       </div>
 
       {view === "list" && (
-        <div className="glass-card overflow-hidden">
+        <div className="glass-card overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead className="bg-primary/5 border-b border-primary/10">
               <tr>
-                <th className="p-5 font-serif font-bold text-primary">Title</th>
-                <th className="p-5 font-serif font-bold text-primary">Status</th>
-                <th className="p-5 font-serif font-bold text-primary">Date</th>
-                <th className="p-5 font-serif font-bold text-primary text-right">Actions</th>
+                <th className="p-3 sm:p-5 font-serif font-bold text-primary text-sm whitespace-nowrap">Title</th>
+                <th className="p-3 sm:p-5 font-serif font-bold text-primary text-sm whitespace-nowrap hidden sm:table-cell">Status</th>
+                <th className="p-3 sm:p-5 font-serif font-bold text-primary text-sm whitespace-nowrap hidden md:table-cell">Date</th>
+                <th className="p-3 sm:p-5 font-serif font-bold text-primary text-sm whitespace-nowrap text-right">Actions</th>
               </tr>
             </thead>
             <tbody>
               {blogs.map(b => (
                 <tr key={b.slug} className="border-t border-primary/5 hover:bg-primary/[0.02]">
-                  <td className="p-5 font-medium">{b.title}</td>
-                  <td className="p-5">
+                  <td className="p-3 sm:p-5">
+                    <span className="font-bold text-primary text-sm sm:text-base">{b.title}</span>
+                    <div className="sm:hidden flex items-center gap-2 mt-1">
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase ${b.published ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+                        {b.published ? "Live" : "Draft"}
+                      </span>
+                      <span className="text-[10px] text-foreground/40">{new Date(b.createdAt).toLocaleDateString()}</span>
+                    </div>
+                  </td>
+                  <td className="p-3 sm:p-5 hidden sm:table-cell">
                     <span className={`px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase ${b.published ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
                       {b.published ? "Published" : "Draft"}
                     </span>
                   </td>
-                  <td className="p-5 text-sm text-foreground/50">{new Date(b.createdAt).toLocaleDateString()}</td>
-                  <td className="p-5 text-right space-x-4">
-                    <button onClick={() => openEditor(b.slug)} className="text-primary font-medium hover:text-secondary transition-colors">Edit</button>
-                    <button onClick={() => handleDelete(b.slug)} className="text-red-400 font-medium hover:text-red-600 transition-colors">Delete</button>
+                  <td className="p-3 sm:p-5 text-sm text-foreground/50 hidden md:table-cell">{new Date(b.createdAt).toLocaleDateString()}</td>
+                  <td className="p-3 sm:p-5 text-right space-x-3 sm:space-x-4">
+                    <button onClick={() => openEditor(b.slug)} className="text-primary font-medium hover:text-secondary transition-colors text-sm">Edit</button>
+                    <button onClick={() => handleDelete(b.slug)} className="text-red-400 font-medium hover:text-red-600 transition-colors text-sm">Delete</button>
                   </td>
                 </tr>
               ))}
@@ -228,9 +240,9 @@ export default function AdminDashboard() {
       )}
 
       {view === "edit" && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-[70vh]">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6 lg:gap-8 min-h-[50vh] lg:min-h-[70vh]">
           {/* Editor */}
-          <div className="flex flex-col gap-5 glass-card p-6 h-full">
+          <div className="flex flex-col gap-4 sm:gap-5 glass-card p-4 sm:p-6">
             <input className="w-full px-4 py-3 border border-primary/20 bg-white/50 rounded-xl font-bold text-xl text-primary focus:outline-none focus:ring-2 focus:ring-secondary/50 placeholder:text-foreground/30" placeholder="Transmission Title" value={title} onChange={e=>setTitle(e.target.value)} />
             <input className="w-full px-4 py-2 border border-primary/10 bg-white/50 rounded-lg text-sm text-foreground/60 focus:outline-none focus:ring-1 focus:ring-secondary/50" placeholder="URL Slug (auto-generates if empty)" value={slug} onChange={e=>setSlug(e.target.value)} />
             <textarea className="w-full px-4 py-3 border border-primary/10 bg-white/50 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-secondary/50 resize-y" placeholder="Short excerpt for lists..." value={excerpt} onChange={e=>setExcerpt(e.target.value)} rows={2} />
@@ -260,8 +272,8 @@ export default function AdminDashboard() {
           {/* Live Preview */}
           <div className="h-full glass-card p-0 flex flex-col overflow-hidden">
             <div className="bg-primary px-6 py-3 font-serif font-bold text-white tracking-widest uppercase text-xs">Live Preview</div>
-            <div className="flex-1 bg-white p-8 overflow-y-auto prose prose-primary prose-a:text-secondary max-w-none">
-              <h1 className="text-4xl font-serif font-extrabold text-primary mb-6 leading-tight border-b border-primary/10 pb-4">{title || "Untitled Transmission"}</h1>
+            <div className="flex-1 bg-white p-4 sm:p-8 overflow-y-auto prose prose-primary prose-a:text-secondary max-w-none">
+              <h1 className="text-2xl sm:text-4xl font-serif font-extrabold text-primary mb-4 sm:mb-6 leading-tight border-b border-primary/10 pb-4">{title || "Untitled Transmission"}</h1>
               <ReactMarkdown>{content || "*Write something magical...*"}</ReactMarkdown>
             </div>
           </div>
@@ -269,29 +281,29 @@ export default function AdminDashboard() {
       )}
 
       {view === "likes" && (
-        <div className="glass-card overflow-hidden">
-          <table className="w-full text-left border-collapse">
+        <div className="glass-card overflow-x-auto">
+          <table className="w-full text-left border-collapse min-w-[500px]">
             <thead className="bg-primary/5 border-b border-primary/10">
               <tr>
-                <th className="p-5 font-serif font-bold text-primary">Name</th>
-                <th className="p-5 font-serif font-bold text-primary">Email</th>
-                <th className="p-5 font-serif font-bold text-primary">Type</th>
-                <th className="p-5 font-serif font-bold text-primary">Content</th>
-                <th className="p-5 font-serif font-bold text-primary">Date</th>
+                <th className="p-3 sm:p-5 font-serif font-bold text-primary text-sm">Name</th>
+                <th className="p-3 sm:p-5 font-serif font-bold text-primary text-sm">Email</th>
+                <th className="p-3 sm:p-5 font-serif font-bold text-primary text-sm">Type</th>
+                <th className="p-3 sm:p-5 font-serif font-bold text-primary text-sm">Content</th>
+                <th className="p-3 sm:p-5 font-serif font-bold text-primary text-sm">Date</th>
               </tr>
             </thead>
             <tbody>
               {likes.map(l => (
                 <tr key={l.id} className="border-t border-primary/5 hover:bg-primary/[0.02]">
-                  <td className="p-5 font-medium">{l.name}</td>
-                  <td className="p-5 text-sm text-foreground/70">{l.email}</td>
-                  <td className="p-5">
-                    <span className={`px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase ${l.content_type === 'blog' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}`}>
+                  <td className="p-3 sm:p-5 font-medium text-sm">{l.name}</td>
+                  <td className="p-3 sm:p-5 text-xs sm:text-sm text-foreground/70">{l.email}</td>
+                  <td className="p-3 sm:p-5">
+                    <span className={`px-2 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold tracking-wider uppercase ${l.content_type === 'blog' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}`}>
                       {l.content_type}
                     </span>
                   </td>
-                  <td className="p-5 text-sm text-foreground/60">{l.content_id}</td>
-                  <td className="p-5 text-sm text-foreground/50">{new Date(l.created_at).toLocaleDateString()}</td>
+                  <td className="p-3 sm:p-5 text-xs sm:text-sm text-foreground/60">{l.content_id}</td>
+                  <td className="p-3 sm:p-5 text-xs sm:text-sm text-foreground/50">{new Date(l.created_at).toLocaleDateString()}</td>
                 </tr>
               ))}
               {likes.length === 0 && <tr><td colSpan={5} className="p-12 text-center text-foreground/50">No cosmic likes received yet.</td></tr>}
@@ -301,21 +313,21 @@ export default function AdminDashboard() {
       )}
 
       {view === "subscribers" && (
-        <div className="glass-card overflow-hidden">
-          <table className="w-full text-left border-collapse">
+        <div className="glass-card overflow-x-auto">
+          <table className="w-full text-left border-collapse min-w-[400px]">
             <thead className="bg-primary/5 border-b border-primary/10">
               <tr>
-                <th className="p-5 font-serif font-bold text-primary">#</th>
-                <th className="p-5 font-serif font-bold text-primary">Email</th>
-                <th className="p-5 font-serif font-bold text-primary">Subscribed On</th>
+                <th className="p-3 sm:p-5 font-serif font-bold text-primary text-sm">#</th>
+                <th className="p-3 sm:p-5 font-serif font-bold text-primary text-sm">Email</th>
+                <th className="p-3 sm:p-5 font-serif font-bold text-primary text-sm">Subscribed On</th>
               </tr>
             </thead>
             <tbody>
               {subscribers.map((s, i) => (
                 <tr key={s.id} className="border-t border-primary/5 hover:bg-primary/[0.02]">
-                  <td className="p-5 text-foreground/50 font-medium">{i + 1}</td>
-                  <td className="p-5 font-medium">{s.email}</td>
-                  <td className="p-5 text-sm text-foreground/50">{new Date(s.created_at).toLocaleDateString()}</td>
+                  <td className="p-3 sm:p-5 text-foreground/50 font-medium text-sm">{i + 1}</td>
+                  <td className="p-3 sm:p-5 font-medium text-sm">{s.email}</td>
+                  <td className="p-3 sm:p-5 text-xs sm:text-sm text-foreground/50">{new Date(s.created_at).toLocaleDateString()}</td>
                 </tr>
               ))}
               {subscribers.length === 0 && <tr><td colSpan={3} className="p-12 text-center text-foreground/50">No subscribers yet.</td></tr>}
@@ -327,7 +339,7 @@ export default function AdminDashboard() {
       {view === "contacts" && (
         <div className="space-y-4">
           {contacts.map(c => (
-            <div key={c.id} className="glass-card p-6">
+            <div key={c.id} className="glass-card p-4 sm:p-6">
               <div className="flex items-center justify-between mb-3">
                 <div>
                   <span className="font-bold text-primary">{c.name}</span>
