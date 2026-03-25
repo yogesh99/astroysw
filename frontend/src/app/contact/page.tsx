@@ -46,7 +46,7 @@ export default function Contact() {
               </div>
               <div>
                 <h4 className="font-bold text-primary">Email</h4>
-                <p className="text-foreground/70 text-sm">hello@astroysw.com</p>
+                <p className="text-foreground/70 text-sm">astroysw.team@gmail.com</p>
               </div>
             </div>
             <div className="flex items-start gap-4">
