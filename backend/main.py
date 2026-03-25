@@ -54,6 +54,22 @@ def init_db():
             UNIQUE(content_type, content_id, email)
         )
     """)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS subscribers (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT NOT NULL UNIQUE,
+            created_at TEXT NOT NULL
+        )
+    """)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS contacts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL,
+            message TEXT NOT NULL,
+            created_at TEXT NOT NULL
+        )
+    """)
     conn.commit()
     conn.close()
 
@@ -93,9 +109,12 @@ class ContactForm(BaseModel):
     message: str
 
 class LikeRequest(BaseModel):
-    content_type: str  # "blog" or "knowledge"
-    content_id: str    # slug or id
+    content_type: str
+    content_id: str
     name: str
+    email: str
+
+class SubscribeRequest(BaseModel):
     email: str
 
 # --- Auth ---
@@ -233,8 +252,29 @@ async def upload_image(file: UploadFile = File(...), current_admin: str = Depend
 
 @app.post("/api/contact")
 async def submit_contact(form: ContactForm):
-    print(f"Contact Form Submission: {form.name} <{form.email}> - {form.message}")
+    conn = get_db()
+    conn.execute(
+        "INSERT INTO contacts (name, email, message, created_at) VALUES (?, ?, ?, ?)",
+        (form.name, form.email, form.message, datetime.utcnow().isoformat())
+    )
+    conn.commit()
+    conn.close()
     return {"status": "success", "message": "Signal received"}
+
+@app.post("/api/subscribe")
+async def subscribe(sub: SubscribeRequest):
+    conn = get_db()
+    try:
+        conn.execute(
+            "INSERT INTO subscribers (email, created_at) VALUES (?, ?)",
+            (sub.email, datetime.utcnow().isoformat())
+        )
+        conn.commit()
+    except sqlite3.IntegrityError:
+        conn.close()
+        raise HTTPException(status_code=409, detail="Already subscribed")
+    conn.close()
+    return {"status": "success"}
 
 # --- Likes API ---
 @app.post("/api/likes")
@@ -284,3 +324,17 @@ async def admin_list_likes(current_admin: str = Depends(get_current_admin)):
     ).fetchall()
     conn.close()
     return [{"id": r["id"], "content_type": r["content_type"], "content_id": r["content_id"], "name": r["name"], "email": r["email"], "created_at": r["created_at"]} for r in rows]
+
+@app.get("/api/admin/subscribers")
+async def admin_list_subscribers(current_admin: str = Depends(get_current_admin)):
+    conn = get_db()
+    rows = conn.execute("SELECT id, email, created_at FROM subscribers ORDER BY created_at DESC").fetchall()
+    conn.close()
+    return [{"id": r["id"], "email": r["email"], "created_at": r["created_at"]} for r in rows]
+
+@app.get("/api/admin/contacts")
+async def admin_list_contacts(current_admin: str = Depends(get_current_admin)):
+    conn = get_db()
+    rows = conn.execute("SELECT id, name, email, message, created_at FROM contacts ORDER BY created_at DESC").fetchall()
+    conn.close()
+    return [{"id": r["id"], "name": r["name"], "email": r["email"], "message": r["message"], "created_at": r["created_at"]} for r in rows]

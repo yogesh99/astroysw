@@ -11,7 +11,9 @@ export default function AdminDashboard() {
   
   const [blogs, setBlogs] = useState<any[]>([]);
   const [likes, setLikes] = useState<any[]>([]);
-  const [view, setView] = useState<"list" | "edit" | "likes">("list");
+  const [subscribers, setSubscribers] = useState<any[]>([]);
+  const [contacts, setContacts] = useState<any[]>([]);
+  const [view, setView] = useState<"list" | "edit" | "likes" | "subscribers" | "contacts">("list");
   
   // Editor state
   const [slug, setSlug] = useState("");
@@ -26,6 +28,8 @@ export default function AdminDashboard() {
       setToken(saved);
       fetchBlogs(saved);
       fetchLikes(saved);
+      fetchSubscribers(saved);
+      fetchContacts(saved);
     }
   }, []);
 
@@ -48,6 +52,8 @@ export default function AdminDashboard() {
         localStorage.setItem("admin_token", data.access_token);
         fetchBlogs(data.access_token);
         fetchLikes(data.access_token);
+        fetchSubscribers(data.access_token);
+        fetchContacts(data.access_token);
       } else {
         alert("Login failed. Use admin / astro2026");
       }
@@ -80,6 +86,20 @@ export default function AdminDashboard() {
         const data = await res.json();
         setLikes(data);
       }
+    } catch(e) { }
+  };
+
+  const fetchSubscribers = async (authToken: string) => {
+    try {
+      const res = await fetch(`${API_URL}/admin/subscribers`, { headers: { Authorization: `Bearer ${authToken}` } });
+      if (res.ok) setSubscribers(await res.json());
+    } catch(e) { }
+  };
+
+  const fetchContacts = async (authToken: string) => {
+    try {
+      const res = await fetch(`${API_URL}/admin/contacts`, { headers: { Authorization: `Bearer ${authToken}` } });
+      if (res.ok) setContacts(await res.json());
     } catch(e) { }
   };
 
@@ -164,6 +184,8 @@ export default function AdminDashboard() {
             <div className="flex rounded-full border border-primary/15 overflow-hidden">
               <button onClick={() => setView("list")} className={`px-5 py-2 text-sm font-medium transition-all ${view === "list" ? 'bg-primary text-white' : 'text-primary hover:bg-primary/5'}`}>Posts</button>
               <button onClick={() => { setView("likes"); fetchLikes(token); }} className={`px-5 py-2 text-sm font-medium transition-all ${view === "likes" ? 'bg-primary text-white' : 'text-primary hover:bg-primary/5'}`}>Likes ({likes.length})</button>
+              <button onClick={() => { setView("subscribers"); fetchSubscribers(token); }} className={`px-5 py-2 text-sm font-medium transition-all ${view === "subscribers" ? 'bg-primary text-white' : 'text-primary hover:bg-primary/5'}`}>Subscribers ({subscribers.length})</button>
+              <button onClick={() => { setView("contacts"); fetchContacts(token); }} className={`px-5 py-2 text-sm font-medium transition-all ${view === "contacts" ? 'bg-primary text-white' : 'text-primary hover:bg-primary/5'}`}>Messages ({contacts.length})</button>
             </div>
           )}
           {view === "list" && <button onClick={() => openEditor()} className="px-6 py-2 bg-secondary hover:bg-secondary-light text-white rounded-full font-medium shadow-md transition-all">New Transmission</button>}
@@ -275,6 +297,48 @@ export default function AdminDashboard() {
               {likes.length === 0 && <tr><td colSpan={5} className="p-12 text-center text-foreground/50">No cosmic likes received yet.</td></tr>}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {view === "subscribers" && (
+        <div className="glass-card overflow-hidden">
+          <table className="w-full text-left border-collapse">
+            <thead className="bg-primary/5 border-b border-primary/10">
+              <tr>
+                <th className="p-5 font-serif font-bold text-primary">#</th>
+                <th className="p-5 font-serif font-bold text-primary">Email</th>
+                <th className="p-5 font-serif font-bold text-primary">Subscribed On</th>
+              </tr>
+            </thead>
+            <tbody>
+              {subscribers.map((s, i) => (
+                <tr key={s.id} className="border-t border-primary/5 hover:bg-primary/[0.02]">
+                  <td className="p-5 text-foreground/50 font-medium">{i + 1}</td>
+                  <td className="p-5 font-medium">{s.email}</td>
+                  <td className="p-5 text-sm text-foreground/50">{new Date(s.created_at).toLocaleDateString()}</td>
+                </tr>
+              ))}
+              {subscribers.length === 0 && <tr><td colSpan={3} className="p-12 text-center text-foreground/50">No subscribers yet.</td></tr>}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {view === "contacts" && (
+        <div className="space-y-4">
+          {contacts.map(c => (
+            <div key={c.id} className="glass-card p-6">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <span className="font-bold text-primary">{c.name}</span>
+                  <span className="text-foreground/50 text-sm ml-3">{c.email}</span>
+                </div>
+                <span className="text-xs text-foreground/40">{new Date(c.created_at).toLocaleDateString()}</span>
+              </div>
+              <p className="text-foreground/70 text-sm leading-relaxed">{c.message}</p>
+            </div>
+          ))}
+          {contacts.length === 0 && <div className="glass-card p-12 text-center text-foreground/50">No messages received yet.</div>}
         </div>
       )}
     </div>

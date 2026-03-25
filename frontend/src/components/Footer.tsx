@@ -1,7 +1,29 @@
+"use client";
+import { useState } from "react";
 import Link from 'next/link';
 import Image from 'next/image';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api";
+
 export default function Footer() {
+  const [email, setEmail] = useState("");
+  const [subStatus, setSubStatus] = useState<"idle" | "success" | "exists" | "error">("idle");
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(`${API_URL}/subscribe`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) { setSubStatus("success"); setEmail(""); }
+      else if (res.status === 409) setSubStatus("exists");
+      else setSubStatus("error");
+    } catch { setSubStatus("error"); }
+    setTimeout(() => setSubStatus("idle"), 4000);
+  };
+
   return (
     <footer className="w-full bg-white/40 backdrop-blur-lg border-t border-white/50 mt-24 pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-12 gap-12">
@@ -23,16 +45,22 @@ export default function Footer() {
           </ul>
         </div>
         <div className="md:col-span-4">
-          <h4 className="font-bold text-lg mb-4 text-primary font-serif">Stay Connected</h4>
-          <form className="flex flex-col gap-3">
+          <h4 className="font-bold text-lg mb-4 text-primary font-serif">Subscribe to AstroYSW</h4>
+          <form onSubmit={handleSubscribe} className="flex flex-col gap-3">
             <input
               type="email"
+              required
+              value={email}
+              onChange={e => setEmail(e.target.value)}
               placeholder="Your Email Address"
               className="px-4 py-3 rounded-xl border border-primary/10 bg-white/70 focus:outline-none focus:ring-2 focus:ring-secondary/50 placeholder:text-foreground/40 shadow-sm"
             />
             <button className="bg-primary hover:bg-primary-light text-white px-4 py-3 rounded-xl font-medium transition-colors shadow-md shadow-primary/20">
-              Subscribe to Cosmos
+              Subscribe to AstroYSW
             </button>
+            {subStatus === "success" && <p className="text-green-600 text-sm font-medium">✓ You are now subscribed!</p>}
+            {subStatus === "exists" && <p className="text-secondary text-sm font-medium">You are already subscribed ✨</p>}
+            {subStatus === "error" && <p className="text-red-500 text-sm font-medium">Something went wrong. Try again.</p>}
           </form>
         </div>
       </div>

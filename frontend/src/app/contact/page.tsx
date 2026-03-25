@@ -2,15 +2,32 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api";
+
 export default function Contact() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("submitting");
-    setTimeout(() => {
-      setStatus("success");
-    }, 1500);
+    try {
+      const res = await fetch(`${API_URL}/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message }),
+      });
+      if (res.ok) {
+        setStatus("success");
+        setName(""); setEmail(""); setMessage("");
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
@@ -73,7 +90,9 @@ export default function Contact() {
                     <label className="text-xs font-semibold text-primary/80 uppercase tracking-widest">Name</label>
                     <input 
                       required
-                      type="text" 
+                      type="text"
+                      value={name}
+                      onChange={e => setName(e.target.value)}
                       className="w-full px-4 py-3 rounded-xl border border-primary/10 bg-white/50 focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:bg-white transition-all shadow-sm"
                       placeholder="Your Name"
                     />
@@ -82,7 +101,9 @@ export default function Contact() {
                     <label className="text-xs font-semibold text-primary/80 uppercase tracking-widest">Email</label>
                     <input 
                       required
-                      type="email" 
+                      type="email"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
                       className="w-full px-4 py-3 rounded-xl border border-primary/10 bg-white/50 focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:bg-white transition-all shadow-sm"
                       placeholder="you@example.com"
                     />
@@ -93,10 +114,13 @@ export default function Contact() {
                   <textarea 
                     required
                     rows={5}
+                    value={message}
+                    onChange={e => setMessage(e.target.value)}
                     className="w-full px-4 py-3 rounded-xl border border-primary/10 bg-white/50 focus:outline-none focus:ring-2 focus:ring-secondary/50 focus:bg-white transition-all shadow-sm resize-none"
                     placeholder="How can I illuminate your path?"
                   ></textarea>
                 </div>
+                {status === "error" && <p className="text-red-500 text-sm">Something went wrong. Please try again.</p>}
                 <button 
                   disabled={status === "submitting"}
                   className="w-full py-4 bg-primary text-white rounded-xl font-medium text-lg hover:bg-primary-light transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 disabled:opacity-70"
