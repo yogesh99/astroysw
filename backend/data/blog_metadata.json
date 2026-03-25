@@ -1,0 +1,41 @@
+[
+  {
+    "id": "mercury-retrograde-myths",
+    "slug": "mercury-retrograde-myths",
+    "title": "Busting the Biggest Myths About Mercury Retrograde",
+    "excerpt": "Why this misunderstood transit isn't here to ruin your life, and how to actually use it to your advantage.",
+    "readTime": "7 Min Read",
+    "tags": ["Mercury", "Retrograde", "Myths"],
+    "category": "Cosmic Events",
+    "published": true,
+    "createdAt": "2024-06-15T15:30:00Z",
+    "updatedAt": "2024-06-15T15:30:00Z",
+    "featuredImage": "http://localhost:8000/uploads/mercury-retrograde.png"
+  },
+  {
+    "id": "manifestation-moon-phases",
+    "slug": "manifestation-moon-phases",
+    "title": "Manifestation and the 8 Moon Phases",
+    "excerpt": "How to align your energy, intentions, and actions with the exact cycle of the moon.",
+    "readTime": "5 Min Read",
+    "tags": ["Moon", "Manifestation", "Rituals"],
+    "category": "Spiritual Practice",
+    "published": true,
+    "createdAt": "2024-06-01T12:00:00Z",
+    "updatedAt": "2024-06-01T12:00:00Z",
+    "featuredImage": "http://localhost:8000/uploads/moon-phases.png"
+  },
+  {
+    "id": "saturn-return-guide",
+    "slug": "saturn-return-guide",
+    "title": "The Ultimate Guide to Surviving Your Saturn Return",
+    "excerpt": "Everything you need to know about navigating the cosmic coming-of-age that happens in your late twenties.",
+    "readTime": "6 Min Read",
+    "tags": ["Saturn", "Transits", "Adulthood"],
+    "category": "Astrology",
+    "published": true,
+    "createdAt": "2024-05-12T10:00:00Z",
+    "updatedAt": "2024-05-12T10:00:00Z",
+    "featuredImage": "http://localhost:8000/uploads/saturn-return.png"
+  }
+]

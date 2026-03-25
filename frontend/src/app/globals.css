@@ -1,0 +1,39 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+:root {
+  --background: #fcfcfd;
+  --foreground: #1a1a2e;
+}
+
+@theme inline {
+  --color-primary: #3b52a4;
+  --color-primary-light: #5a72c4;
+  --color-secondary: #f4b223;
+  --color-secondary-light: #f6c558;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  /* Cosmic base background */
+  background-image: radial-gradient(circle at top right, rgba(244, 178, 35, 0.08), transparent 40%),
+                    radial-gradient(circle at bottom left, rgba(59, 82, 164, 0.06), transparent 40%);
+  background-attachment: fixed;
+}
+
+@layer utilities {
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl;
+  }
+  
+  .cosmic-gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-br from-primary via-primary-light to-secondary;
+  }
+}

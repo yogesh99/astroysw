@@ -1,0 +1,6 @@
+venv/
+__pycache__/
+*.pyc
+data/astroysw.db
+data/uploads/
+.env
