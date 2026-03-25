@@ -12,7 +12,7 @@ from jose import JWTError, jwt
 import bcrypt
 
 # Configuration (Use environment variables in production)
-SECRET_KEY = "astroysw_super_secret_key"
+SECRET_KEY = os.environ.get("SECRET_KEY", "astroysw_super_secret_key")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7 # 1 week
 ADMIN_USERNAME = "admin"
