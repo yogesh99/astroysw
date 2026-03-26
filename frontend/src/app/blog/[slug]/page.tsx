@@ -10,7 +10,8 @@ const BACKEND_URL = API_URL.replace(/\/api$/, "");
 function resolveImageUrl(url: string) {
   if (!url) return "";
   if (url.startsWith("http")) return url;
-  return `${BACKEND_URL}${url}`;
+  if (url.startsWith("/blog-images/")) return url; // served from frontend public/
+  return `${BACKEND_URL}${url}`; // /uploads/ paths go to backend
 }
 
 function stripFrontmatter(content: string): string {
