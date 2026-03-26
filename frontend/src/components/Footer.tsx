@@ -54,8 +54,9 @@ export default function Footer() {
               onChange={e => setEmail(e.target.value)}
               placeholder="Your Email Address"
               className="px-4 py-3 rounded-xl border border-primary/10 bg-white/70 focus:outline-none focus:ring-2 focus:ring-secondary/50 placeholder:text-foreground/40 shadow-sm"
+              suppressHydrationWarning
             />
-            <button className="bg-primary hover:bg-primary-light text-white px-4 py-3 rounded-xl font-medium transition-colors shadow-md shadow-primary/20">
+            <button className="bg-primary hover:bg-primary-light text-white px-4 py-3 rounded-xl font-medium transition-colors shadow-md shadow-primary/20" suppressHydrationWarning>
               Subscribe to AstroYSW
             </button>
             {subStatus === "success" && <p className="text-green-600 text-sm font-medium">✓ You are now subscribed!</p>}
