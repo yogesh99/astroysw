@@ -248,7 +248,7 @@ async def upload_image(file: UploadFile = File(...), current_admin: str = Depend
     file_loc = os.path.join(UPLOADS_DIR, file.filename)
     with open(file_loc, "wb") as f:
         f.write(await file.read())
-    return {"url": f"http://localhost:8000/uploads/{file.filename}"}
+    return {"url": f"/uploads/{file.filename}"}
 
 @app.post("/api/contact")
 async def submit_contact(form: ContactForm):

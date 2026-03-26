@@ -1,9 +1,18 @@
 import Link from "next/link";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api";
+const BACKEND_URL = API_URL.replace(/\/api$/, "");
+
+function resolveImageUrl(url: string) {
+  if (!url) return "";
+  if (url.startsWith("http")) return url;
+  return `${BACKEND_URL}${url}`;
+}
+
 export default async function BlogListing() {
   let blogs = [];
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api"}/blogs`, { cache: "no-store", next: { revalidate: 0 } });
+    const res = await fetch(`${API_URL}/blogs`, { cache: "no-store", next: { revalidate: 0 } });
     if (res.ok) blogs = await res.json();
   } catch (e) {
     console.error("Failed to fetch blogs");
@@ -24,7 +33,7 @@ export default async function BlogListing() {
             <div className="glass-card p-6 h-full flex flex-col hover:-translate-y-1 transition-transform duration-300">
               <div className="w-full h-48 bg-primary/5 rounded-xl mb-6 relative overflow-hidden flex items-center justify-center">
                 {blog.featuredImage ? (
-                  <img src={blog.featuredImage} alt={blog.title} className="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" />
+                  <img src={resolveImageUrl(blog.featuredImage)} alt={blog.title} className="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" />
                 ) : (
                   <span className="text-4xl opacity-30 group-hover:scale-110 transition-transform duration-700">✨</span>
                 )}

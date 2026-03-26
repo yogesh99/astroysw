@@ -10,7 +10,7 @@
     "published": true,
     "createdAt": "2024-06-15T15:30:00Z",
     "updatedAt": "2024-06-15T15:30:00Z",
-    "featuredImage": "http://localhost:8000/uploads/mercury-retrograde.png"
+    "featuredImage": "/uploads/mercury-retrograde.png"
   },
   {
     "id": "manifestation-moon-phases",
@@ -23,7 +23,7 @@
     "published": true,
     "createdAt": "2024-06-01T12:00:00Z",
     "updatedAt": "2024-06-01T12:00:00Z",
-    "featuredImage": "http://localhost:8000/uploads/moon-phases.png"
+    "featuredImage": "/uploads/moon-phases.png"
   },
   {
     "id": "saturn-return-guide",
@@ -36,6 +36,6 @@
     "published": true,
     "createdAt": "2024-05-12T10:00:00Z",
     "updatedAt": "2024-05-12T10:00:00Z",
-    "featuredImage": "http://localhost:8000/uploads/saturn-return.png"
+    "featuredImage": "/uploads/saturn-return.png"
   }
 ]

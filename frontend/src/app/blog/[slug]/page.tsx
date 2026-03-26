@@ -4,6 +4,15 @@ import { notFound } from "next/navigation";
 import LikeButton from "@/components/LikeButton";
 import ShareButton from "@/components/ShareButton";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api";
+const BACKEND_URL = API_URL.replace(/\/api$/, "");
+
+function resolveImageUrl(url: string) {
+  if (!url) return "";
+  if (url.startsWith("http")) return url;
+  return `${BACKEND_URL}${url}`;
+}
+
 function stripFrontmatter(content: string): string {
   const trimmed = content.trim();
   if (trimmed.startsWith('---')) {
@@ -20,7 +29,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
   
   let blog = null;
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api"}/blogs/${slug}`, { cache: "no-store", next: { revalidate: 0 } });
+    const res = await fetch(`${API_URL}/blogs/${slug}`, { cache: "no-store", next: { revalidate: 0 } });
     if (!res.ok) return notFound();
     blog = await res.json();
   } catch (e) {
@@ -48,7 +57,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
         </h1>
         {blog.meta.featuredImage ? (
            <div className="w-full aspect-video rounded-2xl overflow-hidden bg-primary/5">
-              <img src={blog.meta.featuredImage} alt={blog.meta.title} className="w-full h-full object-cover" />
+              <img src={resolveImageUrl(blog.meta.featuredImage)} alt={blog.meta.title} className="w-full h-full object-cover" />
            </div>
         ) : (
            <div className="w-full aspect-video rounded-2xl bg-gradient-to-br from-primary/5 to-secondary/10 flex items-center justify-center">
