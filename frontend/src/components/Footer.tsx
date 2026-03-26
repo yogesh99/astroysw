@@ -68,8 +68,8 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 mt-16 pt-8 border-t border-primary/10 flex flex-col md:flex-row items-center justify-between text-xs font-semibold text-foreground/50 tracking-wider">
         <p>© {new Date().getFullYear()} ASTROYSW. ALL RIGHTS RESERVED.</p>
         <div className="flex gap-6 mt-4 md:mt-0">
-          <Link href="#" className="hover:text-primary transition-colors">PRIVACY</Link>
-          <Link href="#" className="hover:text-primary transition-colors">TERMS</Link>
+          <Link href="/privacy" className="hover:text-primary transition-colors">PRIVACY</Link>
+          <Link href="/terms" className="hover:text-primary transition-colors">TERMS</Link>
         </div>
       </div>
     </footer>
