@@ -55,10 +55,10 @@ export default function AdminDashboard() {
         fetchSubscribers(data.access_token);
         fetchContacts(data.access_token);
       } else {
-        alert("Login failed. Use admin / astro2026");
+        alert("Login failed. Invalid username or cosmic alignment (password).");
       }
-    } catch(e) {
-      alert("Network error connecting to backend.");
+    } catch(err) {
+      alert("Network or CORS error connecting to the cosmic core (backend). Please check your Render configuration.");
     }
   };
 
